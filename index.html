@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +11,28 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Bilder Datenbank</h1>
-  <form method="POST" action="/api/picture" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <input type="submit" value="hochladen">
-  </form>
+  <input type="file" name="file" onchange="uploadPic()">
   <ul id="pics"></ul>
   <script>
+    function uploadPic() {
+      let formData = new FormData();
+      const pic = document.querySelector('input[type="file"]').files[0];
+      if (pic === undefined) {
+        return;
+      }
+      formData.append('file', pic);
+      fetch('/api/picture', {
+          method: 'POST',
+          body: formData
+        })
+        .then(data => {
+          fetchPics();
+        });
+    }
+
     function fetchPics() {
       fetch('/api/pictures')
         .then(data => data.json())
@@ -31,8 +46,10 @@
             let img = document.createElement("img");
             img.src = `data:${pic.mime};base64,${btoa(String.fromCharCode.apply(null,pic.thumbnail.data))}`;
             let deleteButton = document.createElement("button");
-            deleteButton.onclick = function() {
-              fetch(`/api/picture/${pic.id}`, { method: 'DELETE'})
+            deleteButton.onclick = function () {
+              fetch(`/api/picture/${pic.id}`, {
+                  method: 'DELETE'
+                })
                 .then(data => fetchPics());
             };
             deleteButton.innerHTML = 'Löschen';
@@ -45,4 +62,5 @@
     fetchPics();
   </script>
 </body>
+
 </html>

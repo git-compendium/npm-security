@@ -15,7 +15,7 @@ router.get("/pictures", (req, res) => {
 });
 router.post("/picture", upload.single('file'), (req, res) => {
   debug("Files uploaded: ", req.file);
-  let origDate = new Date()
+  let origDate = moment();
   let hasExif = 0;
   if (req.file.mimetype === 'image/jpeg') {
     const parser = eparser.create(req.file.buffer);
@@ -23,7 +23,7 @@ router.post("/picture", upload.single('file'), (req, res) => {
     debug('EXIF is: ', exif);
     if (exif.tags && exif.tags.DateTimeOriginal) {
       hasExif = 1;
-      origDate = moment(exif.tags.DateTimeOriginal*1000).toDate();
+      origDate = moment.unix(exif.tags.DateTimeOriginal);
       debug('exifdate: ', origDate);
     }
   }
