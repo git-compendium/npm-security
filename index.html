@@ -44,6 +44,7 @@
           for (let pic of pics.data) {
             let li = document.createElement("li");
             let img = document.createElement("img");
+            let span = document.createElement("span");
             img.src = `data:${pic.mime};base64,${btoa(String.fromCharCode.apply(null,pic.thumbnail.data))}`;
             let deleteButton = document.createElement("button");
             deleteButton.onclick = function () {
@@ -53,8 +54,11 @@
                 .then(data => fetchPics());
             };
             deleteButton.innerHTML = 'Löschen';
+            let picDate = new Date(pic.date * 1000);
+            span.innerHTML = picDate;
             li.appendChild(img);
             li.appendChild(deleteButton);
+            li.append(span);
             ul.appendChild(li);
           }
         });

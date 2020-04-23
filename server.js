@@ -7,7 +7,7 @@ const express = require("express"),
 const port = process.env.PORT || 3001;
 
 const db = new sqlite.Database('pictures.db');
-db.run("CREATE TABLE IF NOT EXISTS pic (id TEXT, date TEXT, thumbnail BLOB, mime TEXT, size TEXT, filename TEXT, hasExif NUMBER)");
+db.run("CREATE TABLE IF NOT EXISTS pic (id TEXT, date NUMBER, thumbnail BLOB, mime TEXT, size TEXT, filename TEXT, hasExif NUMBER)");
 
 app.set("db", db);
 app.use('/', express.static('./'));

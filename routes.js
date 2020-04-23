@@ -15,7 +15,7 @@ router.get("/pictures", (req, res) => {
 });
 router.post("/picture", upload.single('file'), (req, res) => {
   debug("Files uploaded: ", req.file);
-  let origDate = moment();
+  let origDate = Date.now();
   let hasExif = 0;
   if (req.file.mimetype === 'image/jpeg') {
     const parser = eparser.create(req.file.buffer);
@@ -23,14 +23,14 @@ router.post("/picture", upload.single('file'), (req, res) => {
     debug('EXIF is: ', exif);
     if (exif.tags && exif.tags.DateTimeOriginal) {
       hasExif = 1;
-      origDate = moment.unix(exif.tags.DateTimeOriginal);
+      origDate = exif.tags.DateTimeOriginal;
       debug('exifdate: ', origDate);
     }
   }
   Jimp.read(req.file.buffer).then(function (image) {
     image.cover(200, 200)
       .getBuffer(req.file.mimetype, function (err, buff) {
-        const entry = [ uuid.v1(), origDate.toISOString(), Buffer.from(buff, 'base64'), req.file.mimetype, req.file.size, hasExif ];
+        const entry = [ uuid.v1(), origDate, Buffer.from(buff, 'base64'), req.file.mimetype, req.file.size, hasExif ];
         const query = "INSERT INTO pic (id, date, thumbnail, mime, size, hasExif) VALUES (?,?,?,?,?,?)";
         req.app.get("db").run(query, entry, (err, data) => {
           res.json({ err: err, data: data});
