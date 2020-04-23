@@ -5,8 +5,7 @@ const Jimp = require('jimp'),
   debug = require("debug")("api"),
   eparser = require('exif-parser'),
   router = express.Router(),
-  uuid = require('uuid'),
-  moment = require('moment');
+  uuid = require('uuid');
 
 router.get("/pictures", (req, res) => {
   req.app.get("db").all("SELECT * from pic", [], (err, rows) => {
