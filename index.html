@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bilder Datenbank</title>
+  <title>Simple picture db</title>
   <style>
     button {
       margin: 2em;
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <h1>Bilder Datenbank</h1>
+  <h1>Simple picture db</h1>
   <input type="file" name="file" onchange="uploadPic()">
   <ul id="pics"></ul>
   <script>
@@ -53,9 +53,9 @@
                 })
                 .then(data => fetchPics());
             };
-            deleteButton.innerHTML = 'Löschen';
+            deleteButton.innerHTML = 'Delete';
             let picDate = new Date(pic.date * 1000);
-            span.innerHTML = picDate;
+            span.innerHTML = picDate.toDateString();
             li.appendChild(img);
             li.appendChild(deleteButton);
             li.append(span);

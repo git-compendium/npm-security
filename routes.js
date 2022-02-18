@@ -8,9 +8,8 @@ const Jimp = require('jimp'),
   uuid = require('uuid');
 
 router.get("/pictures", (req, res) => {
-  req.app.get("db").all("SELECT * from pic", [], (err, rows) => {
-    res.json({err: err, data: rows});
-  });
+  const rows = req.app.get("db").prepare("SELECT * from pic").all();
+  res.json({data: rows});
 });
 router.post("/picture", upload.single('file'), (req, res) => {
   debug("Files uploaded: ", req.file);
@@ -31,17 +30,15 @@ router.post("/picture", upload.single('file'), (req, res) => {
       .getBuffer(req.file.mimetype, function (err, buff) {
         const entry = [ uuid.v1(), origDate, Buffer.from(buff, 'base64'), req.file.mimetype, req.file.size, hasExif ];
         const query = "INSERT INTO pic (id, date, thumbnail, mime, size, hasExif) VALUES (?,?,?,?,?,?)";
-        req.app.get("db").run(query, entry, (err, data) => {
-          res.json({ err: err, data: data});
-        });
+        const data = req.app.get("db").prepare(query).run(entry);
+        res.json({ data: data});
       })
   })
 });
 router.delete("/picture/:id", (req, res) => {
   debug('delete for ', req.params.id);
-  req.app.get("db").run("DELETE FROM pic WHERE id = ?", [req.params.id], (err, data) => {
-    res.json({err: err, data: data});
-  })
+  const data = req.app.get("db").prepare("DELETE FROM pic WHERE id = ?").run([req.params.id]);
+  res.json({data: data});
 });
 
 
