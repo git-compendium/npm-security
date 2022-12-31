@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.3",
-    "testcafe": "^1.18.3"
+    "testcafe": "^15.1.317922"
   },
   "scripts": {
     "start": "node server.js",
